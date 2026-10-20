@@ -21,6 +21,7 @@ NN_theme/
 | [`00_paper_reproduction/`](00_paper_reproduction/) | Reproducing the paper | Does a frozen Mistral-7B learn the grammars in context, as reported? |
 | [`01_logit_lens/`](01_logit_lens/) | Per-layer decoding with the logit lens | At which layer does the learned grammar become readable? |
 | [`02_tuned_lens/`](02_tuned_lens/) | Tuned lens vs. logit lens | Is that layer a property of the model, or of the logit lens? |
+| [`03_induction_heads/`](03_induction_heads/) | Induction heads and ablation | Do induction heads carry the in-context learning? |
 
 ## Meeting log
 
