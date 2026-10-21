@@ -19,13 +19,19 @@ them destroys SRTT learning (pure copying) and reduces AGL learning partly or fu
    check (allowed vs. forbidden continuations), and the per-layer logit lens for the baseline and the top-32 ablation.
 
 ## Code
-- [`code/induction_heads.ipynb`](code/induction_heads.ipynb): the notebook, with plain-language explanations before
-  every section. [Open in Colab](https://colab.research.google.com/github/DorRegev/Plasticity-vs-Learning/blob/main/03_induction_heads/code/induction_heads.ipynb)
-  - Colab T4, 8-bit model. With the default `N_RUNS = 50` paired runs per grammar it takes **about 4–5 hours**. A
-    runtime-estimate cell prints the remaining time before the long part starts.
-  - Every finished condition (and every 10 runs within one) is saved to Google Drive
-    (`MyDrive/plasticity_lens_cache/induction_heads`). After a disconnect: reconnect, **Run all**, approve the
-    Drive popup, and it continues where it stopped.
+| File | What it is |
+|---|---|
+| [`code/induction_heads.ipynb`](code/induction_heads.ipynb) | **Full notebook, corrected** (all conditions: k = 4, 8, 16, 32, 3 random draws, zero ablation; ~4–5 h). [Open in Colab](https://colab.research.google.com/github/DorRegev/Plasticity-vs-Learning/blob/main/03_induction_heads/code/induction_heads.ipynb) |
+| [`code/induction_heads_short.ipynb`](code/induction_heads_short.ipynb) | **Short rerun** with the corrected copying score: k = 4, 8, 16 (per-layer lens at 16), 2 random draws, no zero ablation; reuses run 1's baseline from Drive; ~2–2.5 h. [Open in Colab](https://colab.research.google.com/github/DorRegev/Plasticity-vs-Learning/blob/main/03_induction_heads/code/induction_heads_short.ipynb) |
+| [`code/induction_heads_run1_executed.ipynb`](code/induction_heads_run1_executed.ipynb), [`.html`](code/induction_heads_run1_executed.html) | **Run 1** (full notebook, 50 runs per grammar), kept as it ran, with a correction note at the top. |
+
+Both notebooks run on a Colab T4 (8-bit model). Every finished condition (and every 10 runs within one) is saved to
+Google Drive (`MyDrive/plasticity_lens_cache/induction_heads`). After a disconnect: reconnect, **Run all**, approve
+the Drive popup, and it continues where it stopped.
+
+**Layer numbering.** Head scores index heads by transformer block (0–31). The logit lens's "layer N" is the state
+*after* block N−1. So heads in block 12 write into lens layer 13 (the small step) and heads in block 18 into lens
+layer 19 (the jump).
 
 ## Testing before the GPU run
 The whole notebook was run end to end on CPU with a tiny random Mistral (4 layers × 4 heads): scoring, the hooks,
@@ -42,4 +48,21 @@ two positions forward and attended two positions past the classic target), which
 does not detect. This is a caveat for interpreting low scores in Mistral as well.
 
 ## Results
-To be added after the run.
+
+### Run 1 (2026-10-21; copying score flawed, see below)
+- **Strong induction heads by prefix matching** (score ≈ 0.9, also active on our SRTT streams): **block 18, heads 0,
+  2, 3** and **block 12, heads 6, 7** (head 4 ≈ 0.6), plus block 28 head 0. These feed exactly lens layers 19 (the
+  jump) and 13 (the small step).
+- **Bug:** the copying score (share of the raised logit mass on the attended token) was ~0 for every head, so the
+  prefix × copying ranking was close to arbitrary. The ablated top-32 set contained the three block-18 heads plus 29
+  weak heads, and missed the block-12 heads. Fixed in both notebooks (rank-based copying score).
+- **32 random layer-matched heads: no effect.** The top-32 set: **AGL 0.745 → 0.405, SRTT 0.997 → 0.872**, with
+  Wikipedia loss +1.4% (random: +0.5%) and Olsson's ICL score on Wikipedia unchanged. Zero ≈ mean ablation.
+- **Per-layer lens:** the jump at lens layer 19 halves (AGL 0.41 → 0.19, SRTT 0.51 → 0.25), layers 0–18 are
+  unchanged, later layers recover part of it.
+- **AGL state q1:** allowed and forbidden continuations still separate (0.26 vs. 0.035; baseline 0.30 vs. 0.03).
+- Reading: specific, not general damage; AGL depends on these heads more than SRTT. Since the block-12 heads were not
+  ablated, the short rerun with the corrected ranking is needed for a clean test.
+
+### Short rerun
+To be added.
