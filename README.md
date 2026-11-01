@@ -29,6 +29,7 @@ NN_theme/
 |---|---|---|---|---|
 | 2026-10-13 | 1 | `01_logit_lens` (with the reproduction) | [PDF](01_logit_lens/reports/2026-10-13_meeting1_in_context_grammar_learning.pdf) | Reproduction matches the paper. The grammar appears abruptly at **layer 19**; it becomes the model's actual word output from ~layer 22. |
 | 2026-10-20 | 2 | `02_tuned_lens` | [PDF](02_tuned_lens/reports/2026-10-20_meeting2_in_context_grammar_learning.pdf) | A tuned lens shows the **same abrupt onset at layer 19** (faint 5–10% precursor at layers 13–18): the onset is a property of the model, not of the logit lens. |
+| 2026-11-01 | 3 | `03_induction_heads` | [PDF](03_induction_heads/reports/2026-11-01_meeting3_induction_heads.pdf) | The strongest **induction heads** sit in blocks 18 and 12, which write lens layers 19 and 13. Ablating 16 of 1,024 heads cuts learning (AGL 0.75 → 0.37, SRTT 1.00 → 0.71) and removes the layer-19 jump; 16 random heads have no effect, and Wikipedia loss rises only 0.8%. |
 
 ## Adding a new experiment
 

@@ -95,3 +95,6 @@ does not detect. This is a caveat for interpreting low scores in Mistral as well
 - The run recomputed the baseline instead of loading run 1's (the token ids it validated against differed, likely a
   library update in Colab); its numbers match run 1 (0.747 vs. 0.745, 0.997 vs. 0.997), and all conditions in this
   run share the same inputs.
+
+## Report
+[`reports/2026-11-01_meeting3_induction_heads.pdf`](reports/2026-11-01_meeting3_induction_heads.pdf)
