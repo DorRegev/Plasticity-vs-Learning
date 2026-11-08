@@ -57,3 +57,9 @@ layers are untouched; the same input always gets the same noise.
   more precise); random noise mostly points in directions the model does not use, so compare layers, not absolute
   α values. Layer 13 (the small step) is surprisingly robust (0.735 at α = 0.8); with this design that is not
   interpretable on its own.
+
+## Reports (meeting 4, 2026-11-08)
+- [`reports/2026-11-08_meeting4_noise_robustness.pdf`](reports/2026-11-08_meeting4_noise_robustness.pdf): the noise
+  test, its results and caveats.
+- [`reports/2026-11-08_meeting4_induction_heads_and_noise.pdf`](reports/2026-11-08_meeting4_induction_heads_and_noise.pdf):
+  the induction-heads report (meeting 3) updated with a section on the noise test.
