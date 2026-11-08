@@ -22,6 +22,7 @@ NN_theme/
 | [`01_logit_lens/`](01_logit_lens/) | Per-layer decoding with the logit lens | At which layer does the learned grammar become readable? |
 | [`02_tuned_lens/`](02_tuned_lens/) | Tuned lens vs. logit lens | Is that layer a property of the model, or of the logit lens? |
 | [`03_induction_heads/`](03_induction_heads/) | Induction heads and ablation | Do induction heads carry the in-context learning? |
+| [`04_noise_robustness/`](04_noise_robustness/) | Noise at each layer | Which layers are most fragile for in-context learning, compared with general ability? |
 
 ## Meeting log
 
