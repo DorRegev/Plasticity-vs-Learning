@@ -122,3 +122,10 @@ everywhere).
 sequence. AGL needs several heads working together, and the decision at the end states is split between heads that
 favour ending (18.1, 18.2) and heads that favour continuing (18.3, 31.4). The specialization is by *kind of decision*,
 not by word pair, and the context-dependent SRTT transitions are not special.
+
+## Reports (meeting 5, 2026-11-09)
+- [`reports/2026-11-09_meeting5_head_specialization.pdf`](reports/2026-11-09_meeting5_head_specialization.pdf): the
+  head-specialization results (run 2).
+- [`reports/2026-11-09_meeting5_induction_heads_full_report.pdf`](reports/2026-11-09_meeting5_induction_heads_full_report.pdf):
+  the full induction-heads report, now with all four tests (head ablation, noise, and head specialization per
+  transition).
