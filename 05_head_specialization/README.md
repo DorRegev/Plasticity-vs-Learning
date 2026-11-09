@@ -48,6 +48,9 @@ About 2.4 hours on a T4, saved to Drive as it goes. With the stream fix, a recon
 - [`code/head_specialization_run1_executed.ipynb`](code/head_specialization_run1_executed.ipynb) and
   [`code/head_specialization_run1_executed.html`](code/head_specialization_run1_executed.html): run 1 (2026-11-09;
   Steps A and B; Part 1 found no saved results; Step C skipped automatically).
+- [`code/head_specialization_run2_executed.ipynb`](code/head_specialization_run2_executed.ipynb) and
+  [`code/head_specialization_run2_executed.html`](code/head_specialization_run2_executed.html): run 2 (2026-11-09;
+  Part 1 fresh, Step C).
 
 ## Testing before the GPU run
 Run end to end on CPU with a tiny random Mistral, after a tiny run of the `03` short notebook into the same cache:
@@ -89,3 +92,33 @@ which is random per session. So saved results never matched a later session (thi
 baseline). Results *within* a session are paired and valid; only reuse across sessions was affected. Fix: iterate in
 sorted order (tested: identical streams across hash seeds). **Applied to every clean notebook (00–05) on 2026-11-09;**
 the executed notebooks stay as they ran.
+
+### Run 2 (2026-11-09; Part 1 fresh and Step C, 20 paired runs per grammar)
+**Part 1: top 16 switched off together, per transition** (change in P(correct next word); 16 random heads: ≈ 0
+everywhere).
+
+| SRTT | END→0 | 0→1 | 1→2 | 2→2 | 2→0 | 0→2 | 2→3 | 3→1 | 1→END |
+|---|---|---|---|---|---|---|---|---|---|
+| change | −0.14 | −0.21 | −0.11 | −0.35 | −0.23 | −0.32 | −0.23 | −0.28 | −0.09 |
+| ambiguous? | no | yes | yes | yes | yes | yes | yes | no | yes |
+
+- **Ambiguous SRTT transitions are not hit harder:** −0.220 vs. −0.210 on unique ones (difference −0.011 ± 0.035).
+  The unique `3→1` is one of the largest drops. Losing the heads hurts the whole sequence, not the context-dependent
+  part in particular.
+- **AGL:** every transition drops, most of all the word exits from the end states and the q0 loop (q2→2 −0.21,
+  q3→3 −0.17, q0→0 −0.15), less the END exits (−0.06 to −0.10).
+
+**Step C: what one head restores on its own** (vs. all 16 off):
+- **SRTT: one head is almost enough.** Each of 18.2 (+0.20 on average), 18.0 (+0.17), 19.8 (+0.15), 18.3 (+0.14),
+  18.1 (+0.13), 19.9 (+0.12), 20.28 (+0.10) and 31.4 (+0.09) restores a large part of the ~0.22 loss, evenly over all
+  9 transitions (specialization index 0.06–0.14). The other heads restore nothing. **Interchangeable generalists:
+  redundancy explains why no single switch-off mattered in Step B.**
+- **AGL: no head restores much alone** (at most +0.036 on average), **and they split the END-vs-continue decision:**
+  18.2 and 18.1 restore the END exits (q4→END +0.08, +0.085; q2→END, q3→END), while 18.3 and 31.4 restore the word
+  exits (q2→2, q4→1); kept alone, 31.4 even *lowers* the END exits (−0.04). 18.0 restores a little everywhere. This
+  is the same division of labour as in Step B (run 1) and in the attention map (Step A).
+
+**Reading:** SRTT is carried by a pool of redundant induction heads in blocks 18–20, any one of which can copy the
+sequence. AGL needs several heads working together, and the decision at the end states is split between heads that
+favour ending (18.1, 18.2) and heads that favour continuing (18.3, 31.4). The specialization is by *kind of decision*,
+not by word pair, and the context-dependent SRTT transitions are not special.
