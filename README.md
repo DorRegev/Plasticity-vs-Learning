@@ -5,6 +5,11 @@ Thesis project. It builds on *Computation or Weight Adaptation? Rethinking the r
 examples in its prompt alone, with no weight updates. We reproduce that result, then ask **at which of the
 model's 32 layers the learning becomes visible**, and how to read it out.
 
+## Full report
+[`reports/2026-11-09_full_report_in_context_grammar_learning.pdf`](reports/2026-11-09_full_report_in_context_grammar_learning.pdf):
+all tests so far in one document (reproduction, logit lens, tuned lens, induction-head ablation, noise, head
+specialization), with conclusions, limitations and next steps. The per-meeting reports are in each theme's `reports/`.
+
 ## Repository map
 
 Every experiment theme has its own numbered folder with the same layout:
@@ -15,6 +20,8 @@ NN_theme/
 ├── code/         notebook.ipynb (clean, open this in Colab), notebook_executed.ipynb + .html (a finished run)
 └── reports/      meeting reports (PDF), named YYYY-MM-DD_meetingN_....pdf
 ```
+
+The top-level `reports/` folder holds the cumulative full report.
 
 | Folder | Theme | Main question |
 |---|---|---|
