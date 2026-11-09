@@ -41,6 +41,12 @@ NN_theme/
    (`jupyter nbconvert --to html <notebook>_executed.ipynb`) next to it.
 3. Add the meeting report to `reports/` as `YYYY-MM-DD_meetingN_<topic>.pdf` and one line to the meeting log above.
 
+## Note on reproducibility (2026-11-09)
+Before 2026-11-09, every Colab session generated different random word streams: the shared stream code (from the
+paper) iterated over a Python `set`, whose order changes per session. Comparisons *within* a run were unaffected
+(all conditions of a run share its streams), but saved results could not be reused in a later session. All clean
+notebooks now iterate in sorted order, so every session generates the same streams.
+
 ## Running the notebooks
 
 The notebooks run on Google Colab with a T4 GPU (Mistral-7B in 8-bit). Each theme's README has an
