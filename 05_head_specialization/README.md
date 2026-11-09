@@ -28,6 +28,14 @@ frozen and every run uses new random words. It can specialize in a *kind* of tra
 
 All steps read the model's final output (probability of the correct next word, last 1,000 grammar words).
 
+## Run 2 (default settings of the notebook)
+Run 1 did Steps A and B. Run 2 (the notebook's current defaults) skips Step B (`RUN_STEP_B = False`) and runs:
+- **Part 1 fresh:** no switch-off, top 16 switched off, and 16 random layer-matched heads, 20 runs each (the saved `03`
+  results cannot be reused: they were made on other word streams, see the stream bug below);
+- **Step C** (`LEAVE_ONE_IN = True`): all top-16 heads switched off except one, for each of the 16.
+
+About 2.4 hours on a T4, saved to Drive as it goes. With the stream fix, a reconnect now reloads everything finished.
+
 ## Code
 - [`code/head_specialization.ipynb`](code/head_specialization.ipynb): the notebook, with plain-language explanations
   before every section. [Open in Colab](https://colab.research.google.com/github/DorRegev/Plasticity-vs-Learning/blob/main/05_head_specialization/code/head_specialization.ipynb)
@@ -79,4 +87,5 @@ single-head change, 0.048 in AGL, was above the 0.02 threshold; for SRTT all sin
 code, shared by every notebook) iterates over a Python `set` of strings, whose order depends on Python's hash seed,
 which is random per session. So saved results never matched a later session (this is also why `03` recomputed its
 baseline). Results *within* a session are paired and valid; only reuse across sessions was affected. Fix: iterate in
-sorted order (tested: identical streams across hash seeds).
+sorted order (tested: identical streams across hash seeds). **Applied to every clean notebook (00–05) on 2026-11-09;**
+the executed notebooks stay as they ran.
