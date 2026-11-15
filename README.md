@@ -31,6 +31,7 @@ The top-level `reports/` folder holds the cumulative full report.
 | [`03_induction_heads/`](03_induction_heads/) | Induction heads and ablation | Do induction heads carry the in-context learning? |
 | [`04_noise_robustness/`](04_noise_robustness/) | Noise at each layer | Which layers are most fragile for in-context learning, compared with general ability? |
 | [`05_head_specialization/`](05_head_specialization/) | Single induction heads, per transition | Does each induction head serve particular transitions of the grammar? |
+| [`06_transition_memory/`](06_transition_memory/) | Attention to earlier transitions (knockout) | When predicting a transition, which heads read its earlier occurrences, and does the prediction depend on it? |
 
 ## Meeting log
 
