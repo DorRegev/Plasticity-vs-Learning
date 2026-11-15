@@ -22,9 +22,11 @@ other transitions), and does the prediction depend on that reading?
 
 10 paired runs per grammar in Steps 2–3; final output, last 1,000 grammar words.
 
-**How the knockout works:** a custom attention function (registered with `transformers`' `AttentionInterface`) sets
-the scores of the blocked (query, key) links to −∞ in the selected heads only, before the softmax; all other heads and
-layers run unchanged (layers without a selected head use the normal attention). The blocked links are chosen per run
+**How the knockout works:** a custom attention function (registered with `transformers`' `AttentionInterface`) runs
+the normal attention for every head, then recomputes each selected head on its own (float32), with the scores of the
+blocked (query, key) links set to −∞ before the softmax, and replaces that head's output; all other heads and layers
+are unchanged. One head at a time keeps the extra GPU memory to ~0.1 GB for 4,000-token streams (all 32 heads at once
+needed several GB and ran out of memory on the T4). The blocked links are chosen per run
 from the stream itself, and only **strictly earlier** words are ever blocked: a word always keeps access to itself
 (otherwise blocking S would also cut the current word off from itself whenever it was produced by S, and hurt the
 *next* transition, a spurious off-diagonal effect). The reading map likewise leaves out the query's own position.
