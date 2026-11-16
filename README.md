@@ -6,9 +6,10 @@ examples in its prompt alone, with no weight updates. We reproduce that result, 
 model's 32 layers the learning becomes visible**, and how to read it out.
 
 ## Full report
-[`reports/2026-11-09_full_report_in_context_grammar_learning.pdf`](reports/2026-11-09_full_report_in_context_grammar_learning.pdf):
+[`reports/2026-11-16_full_report_in_context_grammar_learning.pdf`](reports/2026-11-16_full_report_in_context_grammar_learning.pdf):
 all tests so far in one document (reproduction, logit lens, tuned lens, induction-head ablation, noise, head
-specialization), with conclusions, limitations and next steps. The per-meeting reports are in each theme's `reports/`.
+specialization, transition memory), with conclusions, limitations and next steps. Earlier version (up to head
+specialization): [`2026-11-09`](reports/2026-11-09_full_report_in_context_grammar_learning.pdf). The per-meeting reports are in each theme's `reports/`.
 
 ## Repository map
 
@@ -42,6 +43,7 @@ The top-level `reports/` folder holds the cumulative full report.
 | 2026-11-01 | 3 | `03_induction_heads` | [PDF](03_induction_heads/reports/2026-11-01_meeting3_induction_heads.pdf) | The strongest **induction heads** sit in blocks 18 and 12, which write lens layers 19 and 13. Ablating 16 of 1,024 heads cuts learning (AGL 0.75 → 0.37, SRTT 1.00 → 0.71) and removes the layer-19 jump; 16 random heads have no effect, and Wikipedia loss rises only 0.8%. |
 | 2026-11-08 | 4 | `04_noise_robustness` | [noise PDF](04_noise_robustness/reports/2026-11-08_meeting4_noise_robustness.pdf), [updated induction-heads PDF](04_noise_robustness/reports/2026-11-08_meeting4_induction_heads_and_noise.pdf) | At equal general damage, noise just before the induction heads (lens layers 15–18) costs about 10% of AGL learning, while noise after lens layer 19 costs none, even where it hurts general ability most. SRTT is too robust to be affected; the weakest of the three lines of evidence, but it points the same way. |
 | 2026-11-09 | 5 | `05_head_specialization` | [specialization PDF](05_head_specialization/reports/2026-11-09_meeting5_head_specialization.pdf), [full induction-heads report](05_head_specialization/reports/2026-11-09_meeting5_induction_heads_full_report.pdf) | In SRTT the block-18 induction heads are interchangeable copies of one mechanism: any one of them restores most of the learning. In AGL they are partly divided, some pushing toward END and others toward continuing, and the learning needs their combination. |
+| 2026-11-16 | 6 | `06_transition_memory` | [PDF](06_transition_memory/reports/2026-11-16_meeting6_transition_memory.pdf) | The induction heads are the memory of each transition: blocking their attention to a transition's earlier occurrences drops that transition by 0.28 (AGL) / 0.42 (SRTT) and leaves the others unharmed; controls ≈ 0. AGL pools many occurrences of every continuation of the state (counting, with competing evidence); in SRTT one recent example is largely enough. |
 
 ## Adding a new experiment
 
