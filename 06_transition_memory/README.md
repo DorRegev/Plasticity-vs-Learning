@@ -55,6 +55,9 @@ blocked).
   count-matched and disjoint from the transition's words). A second session with a different hash seed loaded every
   condition from the cache.
 
+## Reports
+- [`reports/2026-11-16_meeting6_transition_memory.pdf`](reports/2026-11-16_meeting6_transition_memory.pdf) (meeting 6)
+
 ## Results
 
 ### Run 1 (2026-11-15/16; 10 paired runs per grammar)
