@@ -10,8 +10,13 @@ Two follow-ups in one notebook, so that one Colab session runs both.
 averaged over the 20 streams of `05`:
 - each allowed word as its own curve, plus their mean, the true value 1/n, and the forbidden words;
 - the actual share of each word among the earlier visits in that stream (the counts the model has seen);
-- end of learning (last 100 visits): each word's probability ± SE, the spread between allowed words, and, per stream,
-  the correlation between the model's share of each word and that word's actual share in the stream.
+- end of learning (last 100 visits): each word's probability ± SE and the spread between allowed words;
+- does the model follow the counts it has seen? Per stream, the model's share of each word vs. its actual share, in an
+  **early window (visits 20–150)**, where the counts still differ between streams, and at the end (last 100 visits),
+  where every stream is within about ±0.02 of 1/n and there is little to follow. Reported as Pearson r, a one-sided
+  **permutation p-value over the 20 streams** (actual counts shuffled between streams, so n = streams, not points; for
+  two-word states one word only, since the two shares mirror each other), and the slope (how much of a stream's
+  departure from 1/n the model reproduces).
 
 Conditions: no switch-off, top-16 induction heads switched off, 16 random heads switched off (mean ablation, as in
 `03`/`05`). The `05` (run 2) results are reused from Drive when present.
@@ -29,10 +34,14 @@ combination, all 1,024 heads get:
 - for R ≥ 3, the share of the induction attention on the **most recent** earlier copy vs. older copies (how far back
   the head looks).
 
-The score maps are then compared between combinations, and with the `03` maps, using:
-- Pearson correlation over the 1,024 heads;
+The score maps are then compared between combinations, and with the `03` maps, in this order of importance:
+- **overlap of the top 16**;
 - rank (Spearman) correlation;
-- overlap of the top 16.
+- Pearson correlation over the 1,024 heads. It is pushed up automatically because ~1,000 heads score ≈ 0 in every
+  shape, so it is reported last.
+
+Caution for the look-back plot: recency and distance are mixed. In a 1,000-token block the most recent copy is already
+1,000 tokens back, so a preference for the most recent copy only in short blocks may be about distance.
 
 A table lists the heads that are in the top 16 for every combination.
 
