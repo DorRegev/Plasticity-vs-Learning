@@ -73,6 +73,13 @@ head's attention in float32 for up to 512 sampled query positions per sequence a
   - the custom attention recomputes the `03` test (same tokens) and must match the saved `03` prefix-matching scores
     (on the tiny model: max |diff| 0.000, r = 1.000).
 
+## Reports
+Meeting 7 updated two existing reports with these results (2026-11-18):
+- [`reports/2026-11-18_meeting7_where_learning_appears_updated.pdf`](reports/2026-11-18_meeting7_where_learning_appears_updated.pdf):
+  the logit-lens / tuned-lens report (meetings 1–2), with Part A added (each allowed word separately).
+- [`reports/2026-11-18_meeting7_induction_heads_full_report.pdf`](reports/2026-11-18_meeting7_induction_heads_full_report.pdf):
+  the full induction-heads report (meetings 3–6), with Part B added (the heads across 27 test sequences).
+
 ## Results
 
 ### Run 1 (2026-11-17)
