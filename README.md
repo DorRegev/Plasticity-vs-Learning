@@ -11,7 +11,12 @@ all tests so far in one document (reproduction, logit lens, tuned lens, inductio
 specialization, transition memory, continuation balance and induction-head stability), with conclusions, limitations
 and next steps. Earlier versions: [`2026-11-16`](reports/2026-11-16_full_report_in_context_grammar_learning.pdf)
 (up to transition memory), [`2026-11-09`](reports/2026-11-09_full_report_in_context_grammar_learning.pdf) (up to head
-specialization). The per-meeting reports are in each theme's `reports/`.
+specialization).
+
+## Lab-meeting presentation
+[`reports/2026-11-18_lab_meeting_inside_in_context_grammar_learning.pptx`](reports/2026-11-18_lab_meeting_inside_in_context_grammar_learning.pptx):
+"Inside in-context grammar learning", 36 slides. It covers the paper and its reproduction, the metrics, tests 2–7 and
+the induction-head robustness check, and ends with a summary and open questions. The per-meeting reports are in each theme's `reports/`.
 
 ## Repository map
 
