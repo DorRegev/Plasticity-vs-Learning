@@ -4,3 +4,6 @@ __pycache__/
 .ipynb_checkpoints/
 .DS_Store
 lens_cache/
+
+# Semantic Scholar raw-response cache (09_literature_search)
+09_literature_search/results/cache/
