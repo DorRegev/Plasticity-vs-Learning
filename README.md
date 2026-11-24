@@ -41,6 +41,7 @@ The top-level `reports/` folder holds the cumulative full report.
 | [`05_head_specialization/`](05_head_specialization/) | Single induction heads, per transition | Does each induction head serve particular transitions of the grammar? |
 | [`06_transition_memory/`](06_transition_memory/) | Attention to earlier transitions (knockout) | When predicting a transition, which heads read its earlier occurrences, and does the prediction depend on it? |
 | [`07_balance_and_head_stability/`](07_balance_and_head_stability/) | Continuation balance; induction heads across test sequences | Is every allowed continuation learned evenly (and does the model follow the counts it saw)? Are the same induction heads found with any sequence length and number of repeats? |
+| [`08_metric_validation/`](08_metric_validation/) | Validating our own measures | Does the layer-19 jump survive raw numbers and other normalizations? Does our copying score agree with Olsson et al. (OV eigenvalues), and does the head selection? Do the reading map, leave-one-in, FDR and noise results hold against controls? |
 
 ## Meeting log
 
