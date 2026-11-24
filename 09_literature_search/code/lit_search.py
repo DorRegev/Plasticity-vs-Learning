@@ -72,11 +72,16 @@ MECH_KEYWORDS = ["attention head", "induction head", "ablat", "knockout", "circu
 
 
 # ---------------------------------------------------------------------------------------------- API with cache
+class RateLimited(RuntimeError):
+    pass
+
+
 class Client:
-    def __init__(self, refresh=False):
+    def __init__(self, refresh=False, max_retries=MAX_RETRIES):
         self.key = os.environ.get("S2_API_KEY") or None
         self.sleep = SLEEP_WITH_KEY if self.key else SLEEP_NO_KEY
         self.refresh = refresh
+        self.max_retries = max_retries
         self.session = requests.Session()
         self.calls = 0
         self.cache_hits = 0
@@ -96,7 +101,7 @@ class Client:
             body = json.loads(cache_file.read_text())
             return None if body.get("_status") == 404 else body
         headers = {"x-api-key": self.key} if self.key else {}
-        for attempt in range(MAX_RETRIES + 1):
+        for attempt in range(self.max_retries + 1):
             wait = self.sleep - (time.time() - self._last)
             if wait > 0:
                 time.sleep(wait)
@@ -118,9 +123,11 @@ class Client:
             if r is not None and r.status_code not in (429,) and r.status_code < 500:
                 raise RuntimeError(f"{path} {params}: HTTP {r.status_code}: {r.text[:300]}")
             backoff = min(2 ** attempt * 2, 120)
-            print(f"  [{status}] {path} - retry {attempt + 1}/{MAX_RETRIES} in {backoff}s", file=sys.stderr)
+            if attempt == self.max_retries:
+                break
+            print(f"  [{status}] {path} - retry {attempt + 1}/{self.max_retries} in {backoff}s", file=sys.stderr)
             time.sleep(backoff)
-        raise RuntimeError(f"{path} {params}: gave up after {MAX_RETRIES} retries")
+        raise RateLimited(f"{path}: still refused after {self.max_retries} retries (last status: {status})")
 
 
 # ---------------------------------------------------------------------------------------------- steps
@@ -247,8 +254,17 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--refresh", action="store_true", help="ignore the cache and ask the API again")
     parser.add_argument("--date", default=dt.date.today().isoformat(), help="run date written to summary.md")
+    parser.add_argument("--max-retries", type=int, default=MAX_RETRIES, help="retries per request on 429/5xx (backoff up to 120 s)")
     args = parser.parse_args()
-    client = Client(refresh=args.refresh)
+    client = Client(refresh=args.refresh, max_retries=args.max_retries)
+    try:
+        run(client, args)
+    except RateLimited as error:
+        sys.exit(f"stopped: {error}\nEverything fetched so far is cached in {CACHE}; rerun later (or with S2_API_KEY set) "
+                 f"and it continues from there.")
+
+
+def run(client, args):
     RESULTS.mkdir(parents=True, exist_ok=True)
 
     print("Step 1: anchors")
@@ -331,7 +347,6 @@ def main():
     (RESULTS / "shortlist.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
 
     summary = ["# Literature search summary", "", f"- Run date: {args.date}",
-               f"- API requests this run: {client.calls} (cached responses used: {client.cache_hits}); API key used: {'yes' if client.key else 'no'}",
                f"- Unique papers after deduplication: {len(rows)}",
                f"- Shortlist (score >= 5 or TOP): {len(shortlist)}; TOP: {sum(r['TOP'] for r in rows)}; "
                f"without abstract: {sum(r['no_abstract'] for r in rows)}", "",
@@ -346,7 +361,8 @@ def main():
                 "## Keyword searches (top 100 each, years 2019 onward)", "", "| Query | Results |", "|---|---|"]
     summary += [f"| {q} | {n} |" for q, n in query_counts.items()]
     (RESULTS / "summary.md").write_text("\n".join(summary) + "\n", encoding="utf-8")
-    print(f"done: {len(rows)} unique papers, {len(shortlist)} on the shortlist -> {RESULTS}")
+    print(f"done: {len(rows)} unique papers, {len(shortlist)} on the shortlist -> {RESULTS} "
+          f"({client.calls} API requests, {client.cache_hits} cached responses; API key: {'yes' if client.key else 'no'})")
 
 
 if __name__ == "__main__":

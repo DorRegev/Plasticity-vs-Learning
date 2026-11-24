@@ -43,7 +43,11 @@ pip install requests
 export S2_API_KEY=...        # optional: a Semantic Scholar API key; read from the environment only, never saved
 python 09_literature_search/code/lit_search.py            # reuses cached responses
 python 09_literature_search/code/lit_search.py --refresh  # asks the API again (picks up new papers)
+python 09_literature_search/code/lit_search.py --max-retries 30   # more patience when the public pool is busy
 ```
+- **Without a key** the script shares Semantic Scholar's public rate limit, which can refuse most requests for a while.
+  If it still gets 429 after all retries, it stops with a message. Everything fetched so far stays cached, so running
+  it again continues where it stopped.
 - **Cache.** Every raw API response is cached as JSON in `results/cache/`. The cache is git-ignored, so a rerun on the
   same machine makes no requests.
 - **Rate limits.** There is a 1.5 s pause between requests (1.1 s with a key). Responses 429 and 5xx are retried with
