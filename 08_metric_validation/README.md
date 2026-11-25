@@ -42,11 +42,17 @@ by run, with (a) and with 16 random heads.
 ## Part 3. Controls for our new analyses
 - **3a, reading map:**
   - the `06` map for 4 random non-induction heads from blocks 18–19;
-  - a permutation baseline: the earlier words' transition labels are shuffled within each run 100 times, and the
-    real diagonal share is compared with the shuffled ones (p-value).
+  - a permutation baseline: the earlier words' transition labels are shuffled within each run 1,000 times (100 in run
+    1), and the real diagonal share is compared with the shuffled ones (p-value; the smallest possible p is ≈ 0.001).
 - **3b, leave-one-in:** 4 random non-induction heads from blocks 18–19, each measured like the `05` Step C heads. With
   the 16 induction heads off, the head is compared on vs. off (on the same 20 + 20 streams, paired). Expected restored
   learning ≈ 0.
+  - Since run 2, the cell lists the `allbut` files on Drive.
+  - It loads `05` Step C under its exact name, or under any other digest whose streams match.
+  - Anything still missing is recomputed and saved under `05`'s name (`RUN_MISSING_STEP_C = True`, about 8 min per
+    head).
+  - It then compares induction heads with random heads per stream: the mean restored learning over the 16 induction
+    heads minus that over the 4 random heads (95% CI, sign-flip p).
 - **3c, FDR:** every heatmap with significance stars gets per-cell p-values (paired t-test) and Benjamini–Hochberg
   stars (q < 0.05), next to the 3-SE stars. The maps:
   - the `06` knockout maps (top 16, both controls, the four block-18 heads);
@@ -54,6 +60,17 @@ by run, with (a) and with 16 random heads.
   - the 3b controls.
 
   The table also gives the number of significant cells in the random controls.
+- **3e, the `06` knockout per stream (added after run 1):** for the real transition knockout of the top 16 and for the
+  random-position control, each stream gives:
+  - the mean change on the diagonal (blocking a transition's own words, measured at that transition);
+  - the mean change off the diagonal.
+
+  Reported:
+  - effect sizes: mean, 95% CI and Cohen's d_z for each;
+  - paired tests over the 10 `06` streams (an exact sign-flip test over all 2^10 sign patterns, plus a paired t-test):
+    - real diagonal − control diagonal;
+    - (real diagonal − real off-diagonal) − (control diagonal − control off-diagonal).
+  - AGL is the case in question; SRTT is shown for comparison.
 - **3d, noise:**
   1. For lens layers 15–22, the noise size giving 0.05 nats of Wikipedia damage is taken from the `04` Wikipedia
      losses on Drive.
@@ -77,8 +94,9 @@ A summary cell collects the pass/fail criteria. A final cell explains how to rea
     | Part 1 | ~30–45 min |
     | Part 2 | ~5 min (+ ~10 min if the threshold set needs its own ablation) |
     | Part 3a | ~10 min |
-    | Part 3b | ~30 min |
+    | Part 3b | ~30 min (+ ~2.2 h if the `05` Step C results must be recomputed) |
     | Part 3c | ~0 min |
+    | Part 3e | ~0 min |
     | Part 3d | ~75 min |
 
     The notebook measures the time per run first and prints an estimate per part.
@@ -102,6 +120,9 @@ A summary cell collects the pass/fail criteria. A final cell explains how to rea
   - the random control heads are not induction heads.
 
 ## Results (run 1, Colab T4)
+
+Run 2 (3a with 1,000 shuffles, 3b with `05` Step C, the new 3e) is pending; its results will be added here.
+
 - Executed notebook: [`code/metric_validation_run1_executed.ipynb`](code/metric_validation_run1_executed.ipynb).
   HTML: [`code/metric_validation_run1_executed.html`](code/metric_validation_run1_executed.html).
 - 20 runs per grammar. Paired 95% bootstrap intervals; sign-flip p-values.
