@@ -73,3 +73,6 @@ notebooks now iterate in sorted order, so every session generates the same strea
 The notebooks run on Google Colab with a T4 GPU (Mistral-7B in 8-bit). Each theme's README has an
 "Open in Colab" link. A Hugging Face token with access to `mistralai/Mistral-7B-v0.3` must be stored as the
 Colab secret `HF_TOKEN`.
+
+To run a notebook from a different Google account while reusing the results saved on Drive by your first account, see
+[`docs/colab_another_google_account.md`](docs/colab_another_google_account.md).
