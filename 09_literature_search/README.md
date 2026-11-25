@@ -56,9 +56,4 @@ python 09_literature_search/code/lit_search.py --max-retries 30   # more patienc
   after `--refresh` or when the cache is deleted.
 
 ## Last run
-Last run: **not completed yet.** A partial run on 2026-11-24 (from a cloud container, no API key):
-- Step 1: all 10 anchors resolved, and each title matched.
-- Step 2: every citation list fetched (2,228 records; the counts match Semantic Scholar's).
-- Step 3: 4 of the 11 keyword searches returned results. The public pool then kept refusing `/paper/search` with 429.
-
-That cache stayed in the container and is not committed, so `results/` is still empty. Run the script once from your own machine (ideally with `S2_API_KEY` set). It writes `all_papers.csv`, `shortlist.md` and `summary.md`, and `summary.md` records the run date.
+2026-11-25: 2,831 unique papers; shortlist 213 (67 TOP). Run with an API key. See `results/summary.md` for the full counts.
