@@ -7,3 +7,6 @@ lens_cache/
 
 # Semantic Scholar raw-response cache (09_literature_search)
 09_literature_search/results/cache/
+
+# Full-text cache (10_metric_provenance)
+10_metric_provenance/results/cache/
